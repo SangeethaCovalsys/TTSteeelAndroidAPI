@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using TTSteelAndroidAPI.Data;
+using TTSteelWebAPI.Service;
 using static TTSteelAndroidAPI.Model.ProductionExecution.Production;
 
 [ApiController]
@@ -10,13 +12,15 @@ public class ProductionExecutionController : ControllerBase
 {
     private readonly DbConnectionContext _databaseContext;
     private readonly ILogger<ProductionExecutionController> _logger;
+    private readonly SapService _sapService;
     string _query = string.Empty;
     public ProductionExecutionController(
         DbConnectionContext databaseContext,
-        ILogger<ProductionExecutionController> logger)
+        ILogger<ProductionExecutionController> logger,SapService sapService)
     {
         _databaseContext = databaseContext;
         _logger = logger;
+        _sapService = sapService;
     }
 
     [HttpGet("GetSlitRewindCutCounts")]
@@ -299,7 +303,7 @@ public class ProductionExecutionController : ControllerBase
 
             using var conn = _databaseContext.CreateConnection();
             conn.Open();
-            _query= "call COV_GetScheduleSizeDetails('" + schNo + "')"; 
+            _query = "call COV_GetScheduleSizeDetails('" + schNo + "')";
             // Execute stored procedure
             var result = await conn.QueryAsync<ScheduleSizeDto>(_query);
 
@@ -330,115 +334,61 @@ public class ProductionExecutionController : ControllerBase
                 Message = userMessage
             });
         }
-        [HttpPost("CreateProductionExecutionWithC3")]
-        public async Task<IActionResult> CreateProductionExecutionWithC3([FromBody] PrdExeItem request)
-        {
-            using var conn = _databaseContext.CreateConnection();
-            conn.Open();
-            using var trans = conn.BeginTransaction();
+    
 
-            try
-            {
-                _logger.LogInformation("Starting PRDEXE creation in SAP for SchNo: {SchNo}", request.PrdExe.U_SchNo);
-
-                // ========== 1. Prepare payload for SAP ==========
-                var sapPayload = request.PrdExe;
-                sapPayload.DocEntry = 0;  // Let SAP assign
-                sapPayload.DocNum = 0;
-                // Remove C3 collection (not sent to SAP)
-                sapPayload.CCO_TRNS_PRDEXE_C3Collection = null;
-
-                // ========== 2. Call SAP Service Layer to create PRDEXE ==========
-                var sapResult = await _sapService.PostAsync("PRDEXE", sapPayload);
-                var resultJson = JObject.Parse(sapResult);
-                var sapDocEntry = resultJson["DocEntry"]?.Value<int>();
-                var sapDocNum = resultJson["DocNum"]?.Value<int>();
-
-                if (sapDocEntry == null || sapDocEntry == 0)
-                    throw new Exception("SAP PRDEXE creation failed – no DocEntry returned");
-
-                _logger.LogInformation("SAP PRDEXE created. DocEntry: {DocEntry}, DocNum: {DocNum}", sapDocEntry, sapDocNum);
-
-                // ========== 3. Update C2 lines in SAP with bundle quantities (if any) ==========
-                if (request.BundleDetails != null && request.BundleDetails.Any())
-                {
-                    foreach (var bundle in request.BundleDetails)
-                    {
-                        // Build PATCH payload for a single C2 line
-                        var patchPayload = new { U_ActPkt = bundle.BundleQty };
-                        var endpoint = $"PRDEXE({sapDocEntry})/CCO_TRNS_PRDEXE_C2Collection({bundle.LineId})";
-                        await _sapService.PatchAsync("PRDEXE",sapDocEntry.toString(),patchPayload);
-                    }
-                    _logger.LogInformation("Updated {Count} C2 lines in SAP", request.BundleDetails.Count);
-                }
-
-                // ========== 4. Generate batches and insert C3 lines locally ==========
-                if (request.C3List != null && request.C3List.Any())
-                {
-                    var formattedDate = request.PostDate.ToString("yyyyMMdd");
-
-                    for (int i = 0; i < request.C3List.Count; i++)
-                    {
-                        var item = request.C3List[i];
-                        item.DocEntry = sapDocEntry.Value;
-                        item.LineId = i + 1;
-
-                        // Call batch generation stored procedure
-                        var batchNum = await conn.ExecuteScalarAsync<string>(
-                            $@"CALL ""BatchGeneration_PRDEXE""('{formattedDate}', '{request.MachineCode}')",
-                            transaction: trans,
-                            commandTimeout: 120
-                        );
-                        item.U_OPBatch = batchNum;
-
-                        // Insert into local C3 table
-                        var c3Query = BuildC3InsertQuery(item, request.MachineCode, request.PostDate);
-                        await conn.ExecuteAsync(c3Query, transaction: trans);
-                    }
-                    _logger.LogInformation("Inserted {Count} C3 lines locally", request.C3List.Count);
-                }
-
-                trans.Commit();
-
-                return Ok(new ApiResponse<object>
-                {
-                    Success = true,
-                    Message = "Production execution created in SAP and C3 processed locally",
-                    Data = new { sapDocEntry, sapDocNum }
-                });
-            }
-            catch (Exception ex)
-            {
-                trans.Rollback();
-                _logger.LogError(ex, "Error in combined PRDEXE creation");
-                return StatusCode(500, new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = ex.Message.Contains("SAP") ? $"SAP error: {ex.Message}" : "An error occurred"
-                });
-            }
-        }
     }
 
     [HttpPost("CreateProductionExecutionWithC3")]
-    public async Task<IActionResult> CreateProductionExecutionWithC3([FromBody] PrdExeItem request)
+    public async Task<IActionResult> CreateProductionExecutionWithC3([FromBody] ProductionExecutionWithC3Request request)
     {
         using var conn = _databaseContext.CreateConnection();
         conn.Open();
-        using var trans = conn.BeginTransaction();
 
         try
         {
-            _logger.LogInformation("Starting PRDEXE creation in SAP for SchNo: {SchNo}", request.PrdExe.U_SchNo);
+            _logger.LogInformation("Starting PRDEXE creation in SAP for SchNo: {SchNo}", request);
 
-            // ========== 1. Prepare payload for SAP ==========
+            // ========== 1. Generate batch numbers for C3 lines ==========
+            if (request.C3List != null && request.C3List.Any())
+            {
+                var formattedDate = request.PostDate.ToString("yyyyMMdd");
+
+                for (int i = 0; i < request.C3List.Count; i++)
+                {
+                    var item = request.C3List[i];
+
+                    // Call batch generation stored procedure
+                    var batchNum = await conn.ExecuteScalarAsync<string>(
+                        $@"CALL ""BatchGeneration_PRDEXE""('{formattedDate}', '{request.MachineCode}')",
+                        commandTimeout: 120
+                    );
+                    item.U_OPBatch = batchNum;
+                }
+                _logger.LogInformation("Generated {Count} batch numbers for C3 lines", request.C3List.Count);
+            }
+
+            // ========== 2. Update C2 lines with bundle quantities (in memory) ==========
+            if (request.BundleDetails != null && request.BundleDetails.Any())
+            {
+                foreach (var bundle in request.BundleDetails)
+                {
+                    var c2Line = request.PrdExe.CCO_TRNS_PRDEXE_C2Collection
+                        .FirstOrDefault(x => x.LineId == bundle.LineId);
+                    if (c2Line != null)
+                        c2Line.U_ActPkt = bundle.BundleQty;
+                }
+                _logger.LogInformation("Updated {Count} C2 lines in memory", request.BundleDetails.Count);
+            }
+
+            // ========== 3. Prepare full payload for SAP ==========
             var sapPayload = request.PrdExe;
             sapPayload.DocEntry = 0;  // Let SAP assign
             sapPayload.DocNum = 0;
-            // Remove C3 collection (not sent to SAP)
-            sapPayload.CCO_TRNS_PRDEXE_C3Collection = null;
 
-            // ========== 2. Call SAP Service Layer to create PRDEXE ==========
+            // Assign the generated C3 lines to the payload
+            sapPayload.CCO_TRNS_PRDEXE_C3Collection = request.C3List;
+
+            // ========== 4. Call SAP Service Layer to create PRDEXE with all collections ==========
             var sapResult = await _sapService.PostAsync("PRDEXE", sapPayload);
             var resultJson = JObject.Parse(sapResult);
             var sapDocEntry = resultJson["DocEntry"]?.Value<int>();
@@ -447,59 +397,17 @@ public class ProductionExecutionController : ControllerBase
             if (sapDocEntry == null || sapDocEntry == 0)
                 throw new Exception("SAP PRDEXE creation failed – no DocEntry returned");
 
-            _logger.LogInformation("SAP PRDEXE created. DocEntry: {DocEntry}, DocNum: {DocNum}", sapDocEntry, sapDocNum);
-
-            // ========== 3. Update C2 lines in SAP with bundle quantities (if any) ==========
-            if (request.BundleDetails != null && request.BundleDetails.Any())
-            {
-                foreach (var bundle in request.BundleDetails)
-                {
-                    // Build PATCH payload for a single C2 line
-                    var patchPayload = new { U_ActPkt = bundle.BundleQty };
-                    var endpoint = $"PRDEXE({sapDocEntry})/CCO_TRNS_PRDEXE_C2Collection({bundle.LineId})";
-                    await _sapService.PatchAsync("PRDEXE",sapDocEntry.toString(), patchPayload);
-                }
-                _logger.LogInformation("Updated {Count} C2 lines in SAP", request.BundleDetails.Count);
-            }
-
-            // ========== 4. Generate batches and insert C3 lines locally ==========
-            if (request.C3List != null && request.C3List.Any())
-            {
-                var formattedDate = request.PostDate.ToString("yyyyMMdd");
-
-                for (int i = 0; i < request.C3List.Count; i++)
-                {
-                    var item = request.C3List[i];
-                    item.DocEntry = sapDocEntry.Value;
-                    item.LineId = i + 1;
-
-                    // Call batch generation stored procedure
-                    var batchNum = await conn.ExecuteScalarAsync<string>(
-                        $@"CALL ""BatchGeneration_PRDEXE""('{formattedDate}', '{request.MachineCode}')",
-                        transaction: trans,
-                        commandTimeout: 120
-                    );
-                    item.U_OPBatch = batchNum;
-
-                    // Insert into local C3 table
-                    var c3Query = BuildC3InsertQuery(item, request.MachineCode, request.PostDate);
-                    await conn.ExecuteAsync(c3Query, transaction: trans);
-                }
-                _logger.LogInformation("Inserted {Count} C3 lines locally", request.C3List.Count);
-            }
-
-            trans.Commit();
+            _logger.LogInformation("SAP PRDEXE created with all collections. DocEntry: {DocEntry}, DocNum: {DocNum}", sapDocEntry, sapDocNum);
 
             return Ok(new ApiResponse<object>
             {
                 Success = true,
-                Message = "Production execution created in SAP and C3 processed locally",
+                Message = "Production execution created in SAP with C3 and C2 updates",
                 Data = new { sapDocEntry, sapDocNum }
             });
         }
         catch (Exception ex)
         {
-            trans.Rollback();
             _logger.LogError(ex, "Error in combined PRDEXE creation");
             return StatusCode(500, new ApiResponse<object>
             {
@@ -507,7 +415,8 @@ public class ProductionExecutionController : ControllerBase
                 Message = ex.Message.Contains("SAP") ? $"SAP error: {ex.Message}" : "An error occurred"
             });
         }
-        [HttpPost("CreateGoodsIssue")]
+    }
+    [HttpPost("CreateGoodsIssue")]
         public async Task<IActionResult> CreateGoodsIssue([FromQuery] int docEntry)
         {
             using var conn = _databaseContext.CreateConnection();
@@ -566,12 +475,10 @@ public class ProductionExecutionController : ControllerBase
                 if (sapDocEntry == null || sapDocEntry == 0)
                     throw new Exception("SAP Goods Issue failed – no DocEntry returned");
 
-                // ================= 4. UPDATE LOCAL C3 TABLE =================
-                var updateSql = $@"
-            UPDATE ""@CCO_TRNS_PRDEXE_C3"" 
-            SET ""U_GIDE"" = "+sapDocEntry+"  WHERE ""DocEntry"" = "+docEntry+"";
+            // ================= 4. UPDATE LOCAL C3 TABLE =================
+            var updateSql = $@"UPDATE ""@CCO_TRNS_PRDEXE_C3"" SET ""U_GIDE"" = {sapDocEntry} WHERE ""DocEntry"" = {docEntry}";
 
-                await conn.ExecuteAsync(updateSql, transaction: trans);
+            await conn.ExecuteAsync(updateSql, transaction: trans);
 
                 trans.Commit();
 
@@ -784,4 +691,3 @@ public class ProductionExecutionController : ControllerBase
         }
     }
 
-}

@@ -166,10 +166,10 @@ namespace TTSteelAndroidAPI.Model.ProductionExecution
             public List<PrdExeC1Item> C1Collection { get; set; }
 
             [JsonPropertyName("CCO_TRNS_PRDEXE_C2Collection")]
-            public List<PrdExeC2Item> C2Collection { get; set; }
+            public List<PrdExeC2Item> CCO_TRNS_PRDEXE_C2Collection { get; set; }
 
             [JsonPropertyName("CCO_TRNS_PRDEXE_C3Collection")]
-            public List<PrdExeC3Item> C3Collection { get; set; }
+            public List<PrdExeC3Item> CCO_TRNS_PRDEXE_C3Collection { get; set; }
         }
 
         // C1Collection item (material / batch info)
@@ -210,7 +210,7 @@ namespace TTSteelAndroidAPI.Model.ProductionExecution
             public decimal? U_ActlQty { get; set; }
             public decimal? U_BalQty { get; set; }
             public decimal? U_RolBkQty { get; set; }
-            public decimal U_RolBak { get; set; } = "N";
+            public string? U_RolBak { get; set; } = "N";
             public DateTime? U_RcptDate { get; set; }
             public string? U_Remarks { get; set; }
             public string? U_CoilNo { get; set; }
@@ -463,6 +463,20 @@ namespace TTSteelAndroidAPI.Model.ProductionExecution
             public string? U_Pinhole { get; set; }
             public string? U_dentgoug { get; set; }
             public string? U_Remark { get; set; }
+        }
+        public class ProductionExecutionWithC3Request
+        {
+            public PrdExeItem PrdExe { get; set; }
+            public List<BundleDetailDto> BundleDetails { get; set; }
+            public List<PrdExeC3Item> C3List { get; set; }
+            public DateTime PostDate { get; set; }
+            public string MachineCode { get; set; }
+        }
+
+        public class BundleDetailDto
+        {
+            public int LineId { get; set; }
+            public int BundleQty { get; set; }
         }
         public class GoodsIssueDataDto
         {
