@@ -7,12 +7,20 @@ using Serilog;
 using System.Text;
 using TTSteelAndroidAPI.Data;
 using TTSteelAndroidAPI.Interface;
-using TTSteelWebAPI.Service;
+using TTSteelAndroidAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Prevents converting property names to camelCase
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+
+        // Optional: Keep original casing for dictionary keys
+        options.JsonSerializerOptions.DictionaryKeyPolicy = null;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -20,6 +28,7 @@ builder.Services.AddSwaggerGen();
 // Register your custom services
 // -------------------------------
 builder.Services.AddSingleton<DbConnectionContext>();
+builder.Services.AddScoped<SapService>();
 
 builder.Services.AddHttpClient<ISapService, SapService>(client =>
 {
