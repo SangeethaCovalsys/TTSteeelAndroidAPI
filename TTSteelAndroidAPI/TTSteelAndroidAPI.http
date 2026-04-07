@@ -1,0 +1,6 @@
+@TTSteelAndroidAPI_HostAddress = http://localhost:5191
+
+GET {{TTSteelAndroidAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
