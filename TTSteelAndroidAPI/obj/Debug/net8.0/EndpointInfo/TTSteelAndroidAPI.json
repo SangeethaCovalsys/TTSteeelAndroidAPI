@@ -1,0 +1,1657 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "TTSteelAndroidAPI",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetSlitRewindCutCounts": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetEachJobOwnCounts": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "unitCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetScheduleOfJobOwn": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "unitCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetScheduleSizeCount": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "schNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetJobBatchDetails": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "schNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetScheduleSizeDetails": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "schNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CreateProductionExecutionWithC3": {
+      "post": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionExecutionWithC3Request"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionExecutionWithC3Request"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionExecutionWithC3Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CreateGoodsIssue": {
+      "post": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "docEntry",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CreateGoodsReceipt": {
+      "post": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "docEntry",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sch_no",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetDbList": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetWorkOrderLableDetails": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "parameters": [
+          {
+            "name": "DocEntry",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GetLast7DaysProduction": {
+      "get": {
+        "tags": [
+          "ProductionExecution"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BundleDetailDto": {
+        "type": "object",
+        "properties": {
+          "LineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "BundleQty": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrdExeC1Item": {
+        "type": "object",
+        "properties": {
+          "DocEntry": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "LineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "U_Select": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WONo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WOId": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ItemCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPBatch": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SchPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_Pkts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_PcPerPkt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_SchQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_UOM": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WhseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_JBCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_JBName": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MaxYield": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Surface": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coating": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Oiling": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edge": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_EqSpec": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ActlQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_BalQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_RolBkQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_RolBak": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_RcptDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_Remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CoilNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_StartTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_EndTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_Thick": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Form": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Type": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Grade": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edgebur": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OilStain": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coilset": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Telescop": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Scalmark": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_surfscrh": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_RustOxd": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_crosbow": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Pinhole": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_dentgoug": {
+            "type": "string",
+            "nullable": true
+          },
+          "Remark": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrdExeC2Item": {
+        "type": "object",
+        "properties": {
+          "DocEntry": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "LineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "U_Select": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WONo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WOId": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Roll": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPBatch": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MTS": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WIP": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPType": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustName": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SODN": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SODE": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_SOLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCObj": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Plan": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Type": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Form": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Grade": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_FGWhs": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SOSchQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Thick": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Length1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Length2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Pitch": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_UnitWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_SchQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Pcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_SchPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_Pkts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_PcPerPkt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "U_Qty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_UOM": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PassNum": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PassLen": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_PassUOM": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_LastUnit": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_NextUnit": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_MinPkWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_MaxPkWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Surface": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coating": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Oiling": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edge": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_EqSpec": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PlanOP": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Produced": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OpenQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustSpec": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Sequence": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ActPkt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_VPDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_VPPrcLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_VPRmks": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MachCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_VPUser": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edgebur": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OilStain": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coilset": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Telescop": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Scalmark": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_surfscrh": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_RustOxd": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_crosbow": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Pinhole": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_dentgoug": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Remark": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrdExeC3Item": {
+        "type": "object",
+        "properties": {
+          "DocEntry": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "LineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "U_Select": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_AddRow": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ItemCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_AssignLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_IPQty": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_IPItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_INLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OutLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPBatch": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_IPSchPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_IPUOM": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustName": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MTS": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPType": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_RBackNo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_OPBatch": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPForm": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OPThick": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OPWidth": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Location": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Length1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Length2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Pitch": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_SOPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_OPSchPcs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_Pkts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_PcPerPkt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_UnitWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_GrossWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_PckgWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_NetWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_TheoWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_UOM": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Whse": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_FGWhs": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SODN": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SODE": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_SOLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PackID": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GrpNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QDCObj": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_WIP": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GIDN": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GIDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GRDN": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GRDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_QCSts": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ExeSts": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MinPkWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_MaxPkWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Surface": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coating": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Oiling": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edge": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CPartNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PurPrc": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_PrmVal": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_ScrPrc": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_ScrVal": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_UnitPrc": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_selctlbl": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_TrnsId": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_EqSpec": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SubGR": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ConSGI": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_CustSpec": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PartNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Seq": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OBThick1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBThick2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBWidth1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBWidth2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBLen1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBLen2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBDig1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OBDig2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OPLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Type": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GRRevNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_GIRevNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_DwnGrd": {
+            "nullable": true
+          },
+          "U_DwnItem": {
+            "nullable": true
+          },
+          "U_VPDE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_VPPrcLn": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MinWidth": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MaxWidth": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MinLen": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MaxLen": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MinThick": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_MaxThick": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Attach": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Bundling": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_StartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_StartTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_EndTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_QADE": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Shift": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_HeatNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OrgNetWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_OrgGrWt": {
+            "type": "number",
+            "format": "double"
+          },
+          "U_MachCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OrgPkgWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_Operator": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_PWt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "U_VPPCust": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_VPUser": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Edgebur": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OilStain": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Coilset": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Telescop": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Scalmark": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_surfscrh": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_RustOxd": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_crosbow": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Pinhole": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_dentgoug": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Remark": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrdExeItem": {
+        "type": "object",
+        "properties": {
+          "DocNum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "DocEntry": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "U_Source": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_SchDt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "U_ProdType": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_UnitCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ProdDt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_SchSts": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ProcCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_OpID": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_Operator": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_StartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "U_StartTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_EndTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "U_WOEntry": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ShiftA": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ShiftB": {
+            "type": "string",
+            "nullable": true
+          },
+          "U_ShiftC": {
+            "type": "string",
+            "nullable": true
+          },
+          "CCO_TRNS_PRDEXE_C1Collection": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrdExeC1Item"
+            },
+            "nullable": true
+          },
+          "CCO_TRNS_PRDEXE_C2Collection": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrdExeC2Item"
+            },
+            "nullable": true
+          },
+          "CCO_TRNS_PRDEXE_C3Collection": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrdExeC3Item"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionExecutionWithC3Request": {
+        "type": "object",
+        "properties": {
+          "PrdExe": {
+            "$ref": "#/components/schemas/PrdExeItem"
+          },
+          "BundleDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BundleDetailDto"
+            },
+            "nullable": true
+          },
+          "C3List": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrdExeC3Item"
+            },
+            "nullable": true
+          },
+          "PostDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "MachineCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "Date": {
+            "type": "string",
+            "format": "date"
+          },
+          "TemperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TemperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "Summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "loginModel": {
+        "type": "object",
+        "properties": {
+          "CompanyDB": {
+            "type": "string",
+            "nullable": true
+          },
+          "Password": {
+            "type": "string",
+            "nullable": true
+          },
+          "UserName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
